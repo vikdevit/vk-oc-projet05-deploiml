@@ -1,0 +1,27 @@
+{
+    "numeric_features": [
+        "satisfaction_moyenne",
+        "ratio_salaire_experience",
+        "anciennete_ratio",
+        "anciennete_sous_responsable_ratio",
+        "niveau_poste_vs_revenu",
+        "distance_domicile_travail",
+        "nombre_de_formations_suivies",
+        "nombre_d_annees_depuis_la_derniere_promotion"
+    ],
+    "behavioral_features": [
+        "stagnation",
+        "stress",
+        "mobilite",
+        "low_satisfaction"
+    ],
+    "categorical_prefixes": [
+        "poste_",
+        "departement_",
+        "domaine_etude_",
+        "genre_",
+        "heures_supplementaires_",
+        "frequence_deplacement_",
+        "niveau_education_"
+    ]
+}

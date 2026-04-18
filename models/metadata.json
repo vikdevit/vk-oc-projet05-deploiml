@@ -1,0 +1,28 @@
+{
+    "model_name": "random_forest_pred_depart_technovapartners",
+    "version": "1.0.0",
+    "algorithm": "RandomForestClassifier",
+    "task": "binary_classification",
+    "feature_number": 42,
+    "target": "a_quitte_l_entreprise",
+    "trained_on_samples": 1470,
+    "train_test_split": 0.2,
+    "random_state": 42,
+    "metrics": {
+        "recazll_classe_1": 0.45
+    },
+    "feature_engineering": {
+        "handled_by": "FeatureBuilder",
+        "scaling": "RobustScaler on numeric features"
+    },
+    "preprocessing": {
+        "framework": "sklearn ColumnTransformer",
+        "categorical_strategy": "passthrough",
+        "numeric_strategy": "RobustScaler"
+    },
+    "outputs": {
+        "prediction": "0/1",
+        "probability": "predict_proba[:,1]",
+        "explainability": "SHAP TreeExplainer"
+    }
+}
