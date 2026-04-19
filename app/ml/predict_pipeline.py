@@ -4,6 +4,10 @@ import numpy as np
 import pandas as pd
 import shap
 import os
+import matplotlib.pyplot as plt
+import shap
+import io
+import base64
 
 from app.ml.feature_builder import FeatureBuilder, FeatureConfig
 
@@ -37,6 +41,53 @@ base_value = explainer.expected_value
 # cas classification binaire
 if isinstance(base_value, (list, np.ndarray)):
     base_value = base_value[1]
+
+# =========================================================
+# UTILS - SHAP VISUALIZATION
+# =========================================================
+def shap_waterfall_base64(shap_exp, index=0):
+    import matplotlib.pyplot as plt
+    import io
+    import base64
+    import numpy as np
+    import shap
+
+    plt.figure()
+
+    # 1. récupérer explication brute
+    exp = shap_exp[index]
+
+    # 2. CAS MULTI-CLASSE (très important)
+    # shap.values = (n_features, n_classes)
+    if hasattr(exp, "values") and len(exp.values.shape) == 2:
+
+        exp = shap.Explanation(
+            values=exp.values[:, 1],  # classe 1 = churn
+            base_values=(
+                exp.base_values[1]
+                if isinstance(exp.base_values, (list, np.ndarray))
+                else exp.base_values
+            ),
+            data=exp.data,
+            feature_names=exp.feature_names
+        )
+
+    # 3. FORCER base_value scalaire (CRUCIAL)
+    exp = shap.Explanation(
+        values=exp.values,
+        base_values=float(np.array(exp.base_values).reshape(-1)[0]),
+        data=exp.data,
+        feature_names=exp.feature_names
+    )
+
+    # 4. waterfall
+    shap.plots.waterfall(exp, show=False)
+
+    buf = io.BytesIO()
+    plt.savefig(buf, format="png", bbox_inches="tight")
+    plt.close()
+
+    return base64.b64encode(buf.getvalue()).decode("utf-8")
 
 # =========================================================
 # PREDICTION FUNCTION (PRODUCTION CORE)
@@ -75,10 +126,14 @@ def predict_employees(data_json: dict):
     # ---------------------
     X_transformed = preprocessor.transform(X)
 
-    shap_values = explainer(X_transformed)
+    shap_exp = explainer(X_transformed)
 
-    # class 1 (churn = départ)
-    shap_class1 = shap_values.values[:, :, 1] if shap_values.values.ndim == 3 else shap_values.values
+    # shap values classe 1
+    if len(shap_exp.values.shape) == 3:
+        shap_class1 = shap_exp.values[:, :, 1]
+    else:
+        shap_class1 = shap_exp.values
+
 
     # ---------------------
     # OUTPUT
@@ -89,6 +144,8 @@ def predict_employees(data_json: dict):
 
     for i in range(len(X)):
         shap_sum = float(np.sum(shap_class1[i]))
+
+        waterfall = shap_waterfall_base64(shap_exp, i)
 
         results.append({
             "employee_id": int(df.iloc[i]["id"]) if "id" in df.columns else None,
@@ -105,7 +162,8 @@ def predict_employees(data_json: dict):
                 "feature_names": feature_names.tolist(),
                 "base_value": float(base_value),
                 "shap_values": shap_class1[i].tolist(),
-                "shap_sum": shap_sum
+                "shap_sum": shap_sum,
+                "waterfall_plot": waterfall
             }
         })
 
