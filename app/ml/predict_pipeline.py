@@ -92,7 +92,8 @@ def shap_waterfall_base64(shap_exp, index=0):
 # =========================================================
 # PREDICTION FUNCTION (PRODUCTION CORE)
 # =========================================================
-def predict_employees(data_json: dict):
+#def predict_employees(data_json: dict):
+def predict_employees(data_json: dict, include_waterfall: bool = False):
 
     # ---------------------
     # LOAD DATA
@@ -125,8 +126,17 @@ def predict_employees(data_json: dict):
     # SHAP
     # ---------------------
     X_transformed = preprocessor.transform(X)
+    
+    feature_names = preprocessor.get_feature_names_out()
 
-    shap_exp = explainer(X_transformed)
+    X_transformed_df = pd.DataFrame(
+        X_transformed,
+        columns=feature_names
+    )
+
+    shap_exp = explainer(X_transformed_df)
+
+    #shap_exp = explainer(X_transformed)
 
     # shap values classe 1
     if len(shap_exp.values.shape) == 3:
@@ -145,7 +155,10 @@ def predict_employees(data_json: dict):
     for i in range(len(X)):
         shap_sum = float(np.sum(shap_class1[i]))
 
-        waterfall = shap_waterfall_base64(shap_exp, i)
+        #waterfall = shap_waterfall_base64(shap_exp, i)
+        waterfall = None
+        if include_waterfall:
+            waterfall = shap_waterfall_base64(shap_exp, i)
 
         results.append({
             "employee_id": int(df.iloc[i]["id"]) if "id" in df.columns else None,

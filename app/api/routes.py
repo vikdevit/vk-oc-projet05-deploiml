@@ -22,7 +22,8 @@ def predict(
     data: PredictionRequest,
     user=Depends(get_current_user)
 ):
-    results = predict_employees(data.dict())
+    #results = predict_employees(data.dict())
+    results = predict_employees(data.dict(), include_waterfall=False)
 
     return {
         "status": "success",
@@ -39,7 +40,8 @@ def waterfall(
     data: PredictionRequest,
     user=Depends(get_current_user)
 ):
-    results = predict_employees(data.dict())
+    #results = predict_employees(data.dict())
+    results = predict_employees(data.dict(), include_waterfall=True)
 
     return {
         "status": "success",
