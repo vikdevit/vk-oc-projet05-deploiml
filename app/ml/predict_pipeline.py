@@ -40,7 +40,9 @@ base_value = explainer.expected_value
 
 # cas classification binaire
 if isinstance(base_value, (list, np.ndarray)):
-    base_value = base_value[1]
+    base_value = float(np.array(base_value).flatten()[1])
+else:
+    base_value = float(base_value)
 
 # =========================================================
 # UTILS - SHAP VISUALIZATION
@@ -150,7 +152,7 @@ def predict_employees(data_json: dict, include_waterfall: bool = False):
     # ---------------------
     results = []
 
-    feature_names = preprocessor.get_feature_names_out()
+    #feature_names = preprocessor.get_feature_names_out()
 
     for i in range(len(X)):
         shap_sum = float(np.sum(shap_class1[i]))
@@ -165,6 +167,9 @@ def predict_employees(data_json: dict, include_waterfall: bool = False):
 
             # input brut (utile audit / DB)
             "input": df.iloc[i].to_dict(),
+
+            # 👇 AJOUT IMPORTANT POUR LA DB FEATURES
+            "features": X.iloc[i].to_dict(),
 
             # prédiction métier
             "prediction": int(pred[i]),
