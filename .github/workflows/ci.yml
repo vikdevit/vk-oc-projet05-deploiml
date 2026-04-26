@@ -10,6 +10,29 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: Test123!
+          POSTGRES_DB: viken_projet5_ml_db
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U postgres"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    env:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Test123!
+      POSTGRES_DB: viken_projet5_ml_db
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+      JWT_SECRET: dev_super_secret_key_super_long_secret_key_32_chars_minimum_12345
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -17,11 +40,28 @@ jobs:
       - name: Build Docker image
         run: docker build -f docker/Dockerfile -t ml-api .
 
-      - name: Run container
-        run: docker run -d -p 8000:8000 --name api ml-api
+      - name: Run API container
+        run: |
+          docker run -d -p 8000:8000 --name api \
+            -e POSTGRES_USER=$POSTGRES_USER \
+            -e POSTGRES_PASSWORD=$POSTGRES_PASSWORD \
+            -e POSTGRES_DB=$POSTGRES_DB \
+            -e POSTGRES_HOST=$POSTGRES_HOST \
+            -e POSTGRES_PORT=$POSTGRES_PORT \
+            -e JWT_SECRET=$JWT_SECRET \
+            ml-api
 
       - name: Wait API startup
-        run: sleep 10
+        run: |
+          for i in {1..20}; do
+            curl -s http://localhost:8000/health && exit 0
+            echo "waiting API..."
+            sleep 3
+          done
+          echo "API failed to start"
+          docker logs api
+          exit 1
 
-      - name: Test health endpoint
-        run: curl http://localhost:8000/health
+      - name: Show logs if failure
+        if: failure()
+        run: docker logs api
