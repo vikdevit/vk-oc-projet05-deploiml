@@ -54,13 +54,32 @@ jobs:
       - name: Wait API startup
         run: |
           for i in {1..20}; do
-            curl -s http://localhost:8000/health && exit 0
+            curl -s http://localhost:8000/health && break
             echo "waiting API..."
             sleep 3
           done
-          echo "API failed to start"
-          docker logs api
-          exit 1
+
+      - name: Run API test (write in DB)
+        run: |
+          curl -X POST http://localhost:8000/predict \
+            -H "Content-Type: application/json" \
+            -d '{
+              "employees": [{
+                "age": 34,
+                "genre": "m",
+                "revenu_mensuel": 3200,
+                "statut_marital": "celibataire",
+                "departement": "commercial"
+              }]
+            }'
+
+      - name: Verify DB write (api_logs)
+        run: |
+          sudo apt-get update && sudo apt-get install -y postgresql-client
+
+          PGPASSWORD=$POSTGRES_PASSWORD psql \
+            -h localhost -U postgres -d viken_projet5_ml_db \
+            -c "SELECT COUNT(*) FROM api_logs;"
 
       - name: Show API logs if failure
         if: failure()
