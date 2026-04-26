@@ -59,20 +59,57 @@ jobs:
             sleep 3
           done
 
-      - name: Run API test (write in DB)
+      # ✅ IMPORTANT : création des tables dans CI
+      - name: Init DB (create tables + schema)
+        run: |
+          sleep 5
+          docker exec api python scripts/db/create_tables.py
+
+      # (optionnel si ton script insert_employees est requis)
+      - name: Insert employees dataset (optional)
+        run: |
+          docker exec api python scripts/db/insert_employees.py || true
+
+      # ✅ test API avec ton payload complet
+      - name: Run API test (predict)
         run: |
           curl -X POST http://localhost:8000/predict \
             -H "Content-Type: application/json" \
             -d '{
-              "employees": [{
-                "age": 34,
-                "genre": "m",
-                "revenu_mensuel": 3200,
-                "statut_marital": "celibataire",
-                "departement": "commercial"
-              }]
+              "employees": [
+                {
+                  "id": 1471,
+                  "age": 34,
+                  "genre": "m",
+                  "revenu_mensuel": 3200,
+                  "statut_marital": "celibataire",
+                  "departement": "commercial",
+                  "poste": "manager",
+                  "nombre_experiences_precedentes": 3,
+                  "nombre_total_annees_experience": 5,
+                  "nombre_total_annees_dans_l_entreprise": 4,
+                  "nombre_total_annees_dans_le_poste_actuel": 2,
+                  "satisfaction_salarie_environnement": 3,
+                  "satisfaction_salarie_nature_travail": 4,
+                  "satisfaction_salarie_equipe": 3,
+                  "satisfaction_salarie_equilibre_pro_perso": 3,
+                  "note_evaluation_precedente": 4,
+                  "niveau_hierarchique_poste": 2,
+                  "note_evaluation_actuelle": 4,
+                  "heures_supplementaires": "oui",
+                  "precedent_pourcentage_d_augmentation": 12,
+                  "nombre_participation_pee": 2,
+                  "nombre_de_formations_suivies": 3,
+                  "distance_domicile_travail": 10,
+                  "niveau_education": 3,
+                  "domaine_etude": "infra_et_cloud",
+                  "frequence_deplacement": "frequent",
+                  "nombre_d_annees_depuis_la_derniere_promotion": 2
+                }
+              ]
             }'
 
+      # ✅ vérifie écriture en base
       - name: Verify DB write (api_logs)
         run: |
           sudo apt-get update && sudo apt-get install -y postgresql-client
