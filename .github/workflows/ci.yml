@@ -1,0 +1,27 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - dev
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: docker build -t ml-api .
+
+      - name: Run container
+        run: docker run -d -p 8000:8000 --name api ml-api
+
+      - name: Wait API startup
+        run: sleep 10
+
+      - name: Test health endpoint
+        run: curl http://localhost:8000/health
