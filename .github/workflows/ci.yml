@@ -15,7 +15,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Build Docker image
-        run: docker build -t ml-api .
+        run: docker build -f docker/Dockerfile -t ml-api .
 
       - name: Run container
         run: docker run -d -p 8000:8000 --name api ml-api
