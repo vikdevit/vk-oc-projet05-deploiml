@@ -24,6 +24,7 @@ jobs:
           --health-interval=10s
           --health-timeout=5s
           --health-retries=5
+          -c log_statement=all
 
     env:
       POSTGRES_USER: postgres
@@ -62,6 +63,10 @@ jobs:
           docker logs api
           exit 1
 
-      - name: Show logs if failure
+      - name: Show API logs
         if: failure()
         run: docker logs api
+
+      - name: Show PostgreSQL logs (SQL queries)
+        if: always()
+        run: docker logs $(docker ps -q --filter ancestor=postgres)
