@@ -47,7 +47,7 @@ def health():
 def predict_test(data: PredictionRequest):
 
     results = predict_employees(
-        data.dict(),
+        data.model_dump(),
         include_waterfall=False
     )
 
@@ -78,12 +78,12 @@ def predict(data: PredictionRequest):
             None,
             "input_received",
             "success",
-            payload=data.dict()
+            payload=data.model_dump()
         )
 
         for emp in data.employees:
 
-            emp_dict = emp.dict()
+            emp_dict = emp.model_dump()
             emp_dict.pop("id", None)
 
             # 1. INSERT EMPLOYEE
@@ -143,7 +143,7 @@ def predict(data: PredictionRequest):
             "error",
             "fail",
             message=str(e),
-            payload=data.dict()
+            payload=data.model_dump()
         )
 
         conn.close()
@@ -190,7 +190,7 @@ def waterfall(
     user=Depends(get_current_user)
 ):
     #results = predict_employees(data.dict())
-    results = predict_employees(data.dict(), include_waterfall=True)
+    results = predict_employees(data.model_dump(), include_waterfall=True)
 
     return {
         "status": "success",

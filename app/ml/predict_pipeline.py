@@ -162,27 +162,55 @@ def predict_employees(data_json: dict, include_waterfall: bool = False):
         if include_waterfall:
             waterfall = shap_waterfall_base64(shap_exp, i)
 
-        results.append({
-            "employee_id": int(df.iloc[i]["id"]) if "id" in df.columns else None,
+        employee_id = None
 
-            # input brut (utile audit / DB)
+        if "id" in df.columns and pd.notna(df.iloc[i]["id"]):
+            employee_id = int(df.iloc[i]["id"])
+
+        results.append({
+            "employee_id": employee_id,
+
+            # input brut
             "input": df.iloc[i].to_dict(),
 
-            # 👇 AJOUT IMPORTANT POUR LA DB FEATURES
+            # features
             "features": X.iloc[i].to_dict(),
 
-            # prédiction métier
             "prediction": int(pred[i]),
             "probability": float(proba[i]),
 
-            # explicabilité (stockage DB / endpoint futur)
             "explainability": {
                 "feature_names": feature_names.tolist(),
                 "base_value": float(base_value),
                 "shap_values": shap_class1[i].tolist(),
                 "shap_sum": shap_sum,
                 "waterfall_plot": waterfall
-            }
-        })
+    }
+})
+
+
+
+        #results.append({
+         #   "employee_id": int(df.iloc[i]["id"]) if "id" in df.columns else None,
+
+            # input brut (utile audit / DB)
+          #  "input": df.iloc[i].to_dict(),
+
+            # 👇 AJOUT IMPORTANT POUR LA DB FEATURES
+           # "features": X.iloc[i].to_dict(),
+
+            # prédiction métier
+           # "prediction": int(pred[i]),
+           # "probability": float(proba[i]),
+
+            # explicabilité (stockage DB / endpoint futur)
+           # "explainability": {
+            #    "feature_names": feature_names.tolist(),
+             #   "base_value": float(base_value),
+             #   "shap_values": shap_class1[i].tolist(),
+             #   "shap_sum": shap_sum,
+             #   "waterfall_plot": waterfall
+           # }
+       # })
 
     return results

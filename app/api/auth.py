@@ -9,7 +9,7 @@ from app.schemas.response import LoginResponse
 router = APIRouter()
 
 
-@lru_cache
+#@lru_cache
 def load_user():
     with open("data/user.json", "r") as f:
         return json.load(f)

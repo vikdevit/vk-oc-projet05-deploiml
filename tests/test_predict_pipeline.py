@@ -1,0 +1,45 @@
+import pytest
+from app.ml.predict_pipeline import predict_employees
+
+def test_predict_pipeline_output():
+
+    payload = {
+        "employees": [{
+            "id": 1,
+            "age": 30,
+            "genre": "m",
+            "revenu_mensuel": 3000,
+            "statut_marital": "celibataire",
+            "departement": "consulting",
+            "poste": "manager",
+            "nombre_experiences_precedentes": 1,
+            "nombre_total_annees_experience": 5,
+            "nombre_total_annees_dans_l_entreprise": 3,
+            "nombre_total_annees_dans_le_poste_actuel": 2,
+            "satisfaction_salarie_environnement": 3,
+            "satisfaction_salarie_nature_travail": 3,
+            "satisfaction_salarie_equipe": 3,
+            "satisfaction_salarie_equilibre_pro_perso": 3,
+            "note_evaluation_precedente": 3,
+            "niveau_hierarchique_poste": 2,
+            "note_evaluation_actuelle": 3,
+            "heures_supplementaires": "non",
+            "precedent_pourcentage_d_augmentation": 15,
+            "nombre_participation_pee": 1,
+            "nombre_de_formations_suivies": 2,
+            "distance_domicile_travail": 10,
+            "niveau_education": 3,
+            "domaine_etude": "marketing",
+            "frequence_deplacement": "aucun",
+            "nombre_d_annees_depuis_la_derniere_promotion": 1,
+            "nombre_d_annees_sous_le_responsable_actuel": 1
+        }]
+    }
+
+    result = predict_employees(payload)
+
+    assert isinstance(result, list)
+    assert len(result) == 1
+    assert "prediction" in result[0]
+    assert "probability" in result[0]
+    assert 0 <= result[0]["probability"] <= 1
