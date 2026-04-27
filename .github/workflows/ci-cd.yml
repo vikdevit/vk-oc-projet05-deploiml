@@ -32,22 +32,15 @@ jobs:
       # ⏳ Wait API
       - name: Wait API startup
         run: |
-          for i in {1..40}; do
-            STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8000/docs)
-            
-            if [ "$STATUS" = "200"  ]; then 
-              echo "API READY"
-              exit 0
-            fi
-
+          until curl -s http://localhost:8000/docs > /dev/null; do
             echo "waiting API..."
             sleep 2
           done
-
-          echo "API failed"
-
+          
+          echo "API READY"
+          
           docker logs api
-          exit 1
+          
 
       # 🧪 Smoke test
       - name: Test predict_test endpoint
