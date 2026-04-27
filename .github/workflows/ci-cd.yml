@@ -32,15 +32,23 @@ jobs:
       # ⏳ Wait API
       - name: Wait API startup
         run: |
+          TIMEOUT=60
+          ELAPSED=0
+
           until curl -s http://localhost:8000/docs > /dev/null; do
             echo "waiting API..."
             sleep 2
+
+            ELAPSED=$((ELAPSED+2))
+
+            if [ "$ELAPSED" -ge "$TIMEOUT" ]; then
+              echo "API FAILED (timeout)"
+              docker logs api
+              exit 1
+            fi
           done
-          
-          echo "API READY"
-          
-          docker logs api
-          
+
+          echo "API READY" 
 
       # 🧪 Smoke test
       - name: Test predict_test endpoint
