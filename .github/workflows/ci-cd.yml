@@ -18,10 +18,10 @@ jobs:
       - name: Build Docker image
         run: docker build -f docker/Dockerfile -t ml-api .
 
-      # 🚀 Run container (test minimal)
+          # 🚀 Run container (test minimal) avant 8000:8000 pour Docker en local sans HF
       - name: Run container
         run: |
-          docker run -d -p 8000:8000 --name api ml-api
+          docker run -d -p 7860:7860 --name api ml-api
 
       # ⏳ Wait API
       - name: Wait API startup
