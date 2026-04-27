@@ -33,13 +33,18 @@ jobs:
       - name: Wait API startup
         run: |
           for i in {1..40}; do
-            if curl -s http://localhost:8000/docs > /dev/null; then
+            STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8000/docs)
+            
+            if [ "$STATUS" = "200"  ]; then 
               echo "API READY"
               exit 0
             fi
+
             echo "waiting API..."
             sleep 2
           done
+
+          echo "API failed"
 
           docker logs api
           exit 1
