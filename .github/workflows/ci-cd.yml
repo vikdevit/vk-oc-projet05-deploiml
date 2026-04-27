@@ -18,10 +18,16 @@ jobs:
       - name: Build Docker image
         run: docker build -f docker/Dockerfile -t ml-api .
 
-          # 🚀 Run container (test minimal) avant 8000:8000 pour Docker en local sans HF
+      # 🚀 Run container (CI local port mapping)
       - name: Run container
         run: |
-          docker run -d -p 7860:7860 --name api ml-api
+          docker run -d -p 8000:7860 --name api \
+            -e PORT=7860 \
+            -e JWT_SECRET=dev_secret_ci \
+            -e POSTGRES_USER=postgres \
+            -e POSTGRES_PASSWORD=Test123! \
+            -e POSTGRES_DB=viken_projet5_ml_db \
+            ml-api
 
       # ⏳ Wait API
       - name: Wait API startup
@@ -34,7 +40,7 @@ jobs:
           docker logs api
           exit 1
 
-      # 🧪 Smoke test predict_test (IMPORTANT)
+      # 🧪 Smoke test
       - name: Test predict_test endpoint
         run: |
           curl -X POST http://localhost:8000/predict_test \
@@ -74,6 +80,11 @@ jobs:
             ]
           }'
 
+      # 🧹 cleanup
+      - name: Cleanup
+        if: always()
+        run: docker rm -f api || true
+
   cd:
     name: CD - Deploy to Hugging Face Spaces
     needs: ci
@@ -83,7 +94,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # 🚀 Push vers Hugging Face Space
       - name: Deploy to Hugging Face
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
@@ -97,5 +107,5 @@ jobs:
 
           cd hf_space
           git add .
-          git commit -m "deploy update via github actions" || echo "no changes"
+          git commit -m "deploy update via CI/CD" || echo "no changes"
           git push
