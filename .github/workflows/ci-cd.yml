@@ -35,7 +35,7 @@ jobs:
           TIMEOUT=60
           ELAPSED=0
 
-          until curl -s http://localhost:8000/docs > /dev/null; do
+          until curl -v http://localhost:8000/docs > /dev/null; do
             echo "waiting API..."
             sleep 2
 
