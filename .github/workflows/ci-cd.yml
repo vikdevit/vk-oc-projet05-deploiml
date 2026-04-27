@@ -1,0 +1,101 @@
+name: CI-CD Hugging Face
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  ci:
+    name: CI - Build & Smoke test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 🐳 Build Docker image
+      - name: Build Docker image
+        run: docker build -f docker/Dockerfile -t ml-api .
+
+      # 🚀 Run container (test minimal)
+      - name: Run container
+        run: |
+          docker run -d -p 8000:8000 --name api ml-api
+
+      # ⏳ Wait API
+      - name: Wait API startup
+        run: |
+          for i in {1..30}; do
+            curl -s http://localhost:8000/health && exit 0
+            echo "waiting API..."
+            sleep 2
+          done
+          docker logs api
+          exit 1
+
+      # 🧪 Smoke test predict_test (IMPORTANT)
+      - name: Test predict_test endpoint
+        run: |
+          curl -X POST http://localhost:8000/predict_test \
+          -H "Content-Type: application/json" \
+          -d '{
+            "employees": [
+              {
+                "id": 1471,
+                "age": 34,
+                "genre": "m",
+                "revenu_mensuel": 3200,
+                "statut_marital": "celibataire",
+                "departement": "commercial",
+                "poste": "manager",
+                "nombre_experiences_precedentes": 3,
+                "nombre_total_annees_experience": 5,
+                "nombre_total_annees_dans_l_entreprise": 4,
+                "nombre_total_annees_dans_le_poste_actuel": 2,
+                "satisfaction_salarie_environnement": 3,
+                "satisfaction_salarie_nature_travail": 4,
+                "satisfaction_salarie_equipe": 3,
+                "satisfaction_salarie_equilibre_pro_perso": 3,
+                "note_evaluation_precedente": 4,
+                "niveau_hierarchique_poste": 2,
+                "note_evaluation_actuelle": 4,
+                "heures_supplementaires": "oui",
+                "precedent_pourcentage_d_augmentation": 12,
+                "nombre_participation_pee": 2,
+                "nombre_de_formations_suivies": 3,
+                "distance_domicile_travail": 10,
+                "niveau_education": 3,
+                "domaine_etude": "infra_et_cloud",
+                "frequence_deplacement": "frequent",
+                "nombre_d_annees_depuis_la_derniere_promotion": 2,
+                "nombre_d_annees_sous_le_responsable_actuel": 1
+              }
+            ]
+          }'
+
+  cd:
+    name: CD - Deploy to Hugging Face Spaces
+    needs: ci
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 🚀 Push vers Hugging Face Space
+      - name: Deploy to Hugging Face
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          git config --global user.email "github-actions@users.noreply.github.com"
+          git config --global user.name "github-actions"
+
+          git clone https://VikenAI:${HF_TOKEN}@huggingface.co/spaces/VikenAI/ml-api hf_space
+
+          rsync -av --exclude='.git' ./ hf_space/
+
+          cd hf_space
+          git add .
+          git commit -m "deploy update via github actions" || echo "no changes"
+          git push
