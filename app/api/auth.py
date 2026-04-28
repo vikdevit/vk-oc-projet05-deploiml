@@ -12,9 +12,18 @@ router = APIRouter()
 
 
 #@lru_cache
+#def load_user():
+#    
+#    with open("data/user.json", "r") as f:
+#        return json.load(f)
+
+# chemin robuste (local + docker + HF)
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+USER_PATH = os.path.join(BASE_DIR, "data", "user.json")
+
+
 def load_user():
-    
-    with open("data/user.json", "r") as f:
+    with open(USER_PATH, "r") as f:
         return json.load(f)
 
 
