@@ -15,3 +15,18 @@ models/*.pkl
 
 # OS
 .DS_Store
+
+# CI/CD .yml
+.coverage
+.github/workflows/deploy-hf.yml
+.github/workflows/old_ci-cd.yml
+.github/workflows/old_ci.yml
+
+#
+data/
+
+#
+notebook/
+
+#
+uv.lock
