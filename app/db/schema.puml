@@ -1,0 +1,97 @@
+@startuml
+
+' =========================
+' EMPLOYEES
+' =========================
+entity "employees" as employees {
+  * id : int <<PK>>
+  --
+  age : int
+  genre : string
+  revenu_mensuel : int
+  statut_marital : string
+  departement : string
+  poste : string
+  nombre_experiences_precedentes : int
+  nombre_total_annees_experience : int
+  nombre_total_annees_dans_l_entreprise : int
+  nombre_total_annees_dans_le_poste_actuel : int
+  satisfaction_salarie_environnement : int
+  satisfaction_salarie_nature_travail : int
+  satisfaction_salarie_equipe : int
+  satisfaction_salarie_equilibre_pro_perso : int
+  note_evaluation_precedente : int
+  niveau_hierarchique_poste : int
+  note_evaluation_actuelle : int
+  heures_supplementaires : string
+  precedent_pourcentage_d_augmentation : int
+  a_quitte_l_entreprise : string
+  nombre_participation_pee : int
+  nombre_de_formations_suivies : int
+  distance_domicile_travail : int
+  niveau_education : int
+  domaine_etude : string
+  frequence_deplacement : string
+  nombre_d_annees_depuis_la_derniere_promotion : int
+  nombre_d_annees_sous_le_responsable_actuel : int
+}
+
+' =========================
+' FEATURES (ML INPUT)
+' =========================
+entity "features" as features {
+  * id : int <<PK>>
+  --
+  employee_id : int <<FK>>
+  satisfaction_moyenne : float
+  ratio_salaire_experience : float
+  anciennete_ratio : float
+  anciennete_sous_responsable_ratio : float
+  niveau_poste_vs_revenu : float
+  distance_domicile_travail : float
+  nombre_de_formations_suivies : int
+  nombre_d_annees_depuis_la_derniere_promotion : int
+  stagnation : int
+  stress : int
+  mobilite : int
+  low_satisfaction : int
+}
+
+' =========================
+' PREDICTIONS (OUTPUT ML)
+' =========================
+entity "predictions" as predictions {
+  * id : int <<PK>>
+  --
+  employee_id : int <<FK>>
+  prediction : int
+  probability : float
+  shap_values : json
+  input_features : json
+  model_version : string
+  created_at : timestamp
+}
+
+' =========================
+' API LOGS (TRACE COMPLET API ↔ DB)
+' =========================
+entity "api_logs" as api_logs {
+  * id : int <<PK>>
+  --
+  request_id : uuid
+  employee_id : int
+  step : string
+  status : string
+  message : text
+  payload : json
+  created_at : timestamp
+}
+
+' =========================
+' RELATIONS
+' =========================
+employees ||--|| features
+employees ||--o{ predictions
+employees ||--o{ api_logs
+
+@enduml

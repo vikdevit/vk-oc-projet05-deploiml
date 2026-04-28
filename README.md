@@ -123,3 +123,29 @@ domaine_etude_autre                           1470 non-null   bool
  54  niveau_education_4                            1470 non-null   bool    
  55  niveau_education_other                        1470 non-null   bool   
  donc si niveau_deudcation ) 5 alors va dans niveau_education_other
+
+### Etape création Fast API
+Créer une API qui :
+
+ charge le modèle
+ reçoit JSON employés
+ appelle predict_employees()
+ retourne prédiction + proba + SHAP
+
+installation FASTAPI
+uv add fastapi uvicorn
+
+pour lancer l'api depuis le terminal 
+<pre>uv run uvicorn app.main:app --host 0.0.0.0 --port 8000
+<font color="#26A269">INFO</font>:     Started server process [<font color="#2AA1B3">61188</font>]
+<font color="#26A269">INFO</font>:     Waiting for application startup.
+<font color="#26A269">INFO</font>:     Application startup complete.
+<font color="#26A269">INFO</font>:     Uvicorn running on <b>http://0.0.0.0:8000</b> (Press CTRL+C to quit)
+<font color="#26A269">INFO</font>:     192.168.1.10:49896 - &quot;<b>GET /docs HTTP/1.1</b>&quot; <font color="#26A269">200 OK</font>
+<font color="#26A269">INFO</font>:     192.168.1.10:49896 - &quot;<b>GET /openapi.json HTTP/1.1</b>&quot; <font color="#26A269">200 OK</font>
+<font color="#26A269">INFO</font>:     192.168.1.10:50004 - &quot;<b>POST /predict HTTP/1.1</b>&quot; <font color="#26A269">200 OK</font>
+<font color="#26A269">INFO</font>:     192.168.1.10:51086 - &quot;<b>POST /predict HTTP/1.1</b>&quot; <font color="#26A269">200 OK</font>
+</pre>
+
+puis sur une page du navigateur du pc portable linux faire http://192.168.1.26:8000/docs
+

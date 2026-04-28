@@ -65,8 +65,8 @@ class FeatureBuilder:
             "nombre_total_annees_dans_le_poste_actuel",
             "revenu_mensuel"
         ]
-
-        df_mod = df_mod.drop(columns=drop_cols)
+        # df_mod = df_mod.drop(columns=drop_cols)
+        df_mod = df_mod.drop(columns=drop_cols, errors="ignore")
 
         # --------------------
         # FEATURES NUMÉRIQUES DÉRIVÉES
