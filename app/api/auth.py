@@ -19,6 +19,7 @@ def load_user():
         return {
                 "username": "admin"
                 "password_hash": get_password_hash("Test123!")
+                }
 
     with open("data/user.json", "r") as f:
         return json.load(f)
