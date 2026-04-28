@@ -3,6 +3,7 @@ from app.ml.predict_pipeline import predict_employees
 from app.schemas.request import PredictionRequest
 from app.schemas.response import PredictionResponse
 from app.core.deps import get_current_user
+from app.core.config import settings
 
 router = APIRouter()
 
@@ -60,6 +61,13 @@ def predict_test(data: PredictionRequest):
 
 @router.post("/predict")
 def predict(data: PredictionRequest):
+    
+    if settings.environment == "hf":
+        return {
+            "status": "error",
+            "mode": "hf_no_db",
+            "message": "Database not available in Hugging Face. Use /predict_test"
+        }
 
     conn = get_connection()
     results = []
