@@ -11,6 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # il reste encore à intégrer les tests de pytest avec cov comme fait en local
       - name: Checkout code
         uses: actions/checkout@v4
 
