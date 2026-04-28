@@ -5,6 +5,7 @@ import app.db.repository as repo
 def test_repository_loaded():
     assert hasattr(repo, "__file__")
 
+@pytest.mark.db
 def test_insert_employee(db_conn):
 
     employee = {
