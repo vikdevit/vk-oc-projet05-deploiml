@@ -10,6 +10,15 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
+    env:
+      JWT_SECRET: test_secret_key
+      POSTGRES_USER: test
+      POSTGRES_PASSWORD: test
+      POSTGRES_DB: test
+      POSTGRES_HOST: localhost
+      POSTGRES_PORT: 5432
+      ENVIRONMENT: local
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
