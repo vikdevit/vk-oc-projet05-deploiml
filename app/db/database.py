@@ -21,9 +21,7 @@ def get_connection():
     if settings.environment == "hf":
         raise RuntimeError("Database disabled in Hugging Face model")
 
-    if settings.environnment == "test":
-        return None
-   
+      
     return psycopg2.connect(
         dbname=DB_NAME,
         user=DB_USER,

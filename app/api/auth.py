@@ -5,7 +5,6 @@ from functools import lru_cache
 
 from app.core.config import settings
 from app.core.security import verify_password, create_access_token
-from app.core.security import get_password_hash
 from app.schemas.request import LoginRequest
 from app.schemas.response import LoginResponse
 
@@ -15,12 +14,6 @@ router = APIRouter()
 #@lru_cache
 def load_user():
     
-    if settings.environment in ["hf", "test"]:
-        return {
-                "username": "admin"
-                "password_hash": get_password_hash("Test123!")
-                }
-
     with open("data/user.json", "r") as f:
         return json.load(f)
 
