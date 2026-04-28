@@ -54,3 +54,12 @@ Thumbs.db
 .vscode/
 .idea/
 .coverage
+
+# =========================================================
+# CI/CD YML
+# =========================================================
+.coverage
+.github/workflows/deploy-hf.yml
+.github/workflows/old_ci-cd.yml
+.github/workflows/old_ci.yml
+
