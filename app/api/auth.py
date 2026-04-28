@@ -23,6 +23,13 @@ USER_PATH = os.path.join(BASE_DIR, "data", "user.json")
 
 
 def load_user():
+    
+    if settings.environment == "hf":
+        return {
+            "username": os.getenv("ADMIN_USER", "admin"),
+            "password_hash": os.getenv("ADMIN_PASSWORD_HASH")
+        }
+
     with open(USER_PATH, "r") as f:
         return json.load(f)
 
