@@ -16,7 +16,7 @@ jobs:
 
       # 🐳 Build Docker image
       - name: Build Docker image
-        run: docker build -f Dockerfile.hf -t hf-test .
+        run: docker build -f Dockerfile -t hf-test .
 
       # 🚀 Run container (HF mode)
       - name: Run container
