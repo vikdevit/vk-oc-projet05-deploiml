@@ -10,9 +10,9 @@ class Settings(BaseSettings):
     environment: str = "local" # local | hf
 
     # AJOUT DB
-    postgres_user: str
-    postgres_password: str
-    postgres_db: str
+    postgres_user: str | None = None
+    postgres_password: str | None = None
+    postgres_db: str | None = None
     postgres_host: str = "localhost"
     postgres_port: int = 5432
 
