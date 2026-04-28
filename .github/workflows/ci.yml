@@ -26,10 +26,9 @@ jobs:
 
       - name: Run pytest (no DB)
         run: |
-          #PYTHONPATH=. pytest -m "not db" --cov=app --cov-report=term
-          #PYTHONPATH=. pytest --ignore=tests/test_auth.py --cov=app --cov-report=term
-          pytest tests/test_feature_builder.py \
-                 tests/test_validation_errors.py \
-                 tests/test_predict_api_errors.py \
-                 tests/test_predict_pipeline.py
-                 --cov=app
+          PYTHONPATH=. pytest \
+            tests/test_feature_builder.py \
+            tests/test_validation_errors.py \
+            tests/test_predict_api_errors.py \
+            tests/test_predict_pipeline.py \
+            --cov=app --cov-report=term
