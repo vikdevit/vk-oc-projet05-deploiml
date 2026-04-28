@@ -15,13 +15,15 @@ DB_PORT = os.getenv("POSTGRES_PORT", "5432")
 def get_connection():
     """
     Retourne une connexion PostgreSQL
-    (désactivée en mode Hugging Face)
+    (désactivée en mode Hugging Face ou Test)
     """
     # HF MODE pas de DB
     if settings.environment == "hf":
-        raise RuntimeError("Database disabled in Hugging Face mode")
+        raise RuntimeError("Database disabled in Hugging Face model")
 
-
+    if settings.environnment == "test":
+        return None
+   
     return psycopg2.connect(
         dbname=DB_NAME,
         user=DB_USER,
