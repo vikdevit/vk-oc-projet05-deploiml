@@ -5,8 +5,11 @@ class Settings(BaseSettings):
     jwt_secret: str 
     jwt_algorithm: str = "HS256"
     access_token_expire_minutes: int = 60
+    
+    # AJOUT pour HF
+    environment: str = "local" # local | hf
 
-    # ✅ AJOUT DB
+    # AJOUT DB
     postgres_user: str
     postgres_password: str
     postgres_db: str
