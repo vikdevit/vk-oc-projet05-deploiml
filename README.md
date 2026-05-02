@@ -23,7 +23,7 @@ Le projet s’inscrit dans une démarche MLOps complète :
 ---
 
 ## Architecture du projet
-
+```
 app/ 
 ├── api/ # Routes API (auth, prédiction) 
 ├── core/ # Sécurité, config, dépendances 
@@ -37,7 +37,7 @@ models/ # Modèle ML + metadata
 scripts/ # Scripts DB & utilitaires 
 tests/ # Tests pytest 
 docker/ # Dockerfile
-
+```
 ---
 
 ## Installation
