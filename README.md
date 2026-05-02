@@ -1,3 +1,13 @@
+---
+title: Turnover Prediction API
+emoji: 🤖
+colorFrom: blue
+colorTo: green
+sdk: docker
+app_file: app.py
+pinned: false
+---
+
 # API de Prédiction du Turnover Employés de la société TechNova Partners ESN
 
 ## Présentation du projet
