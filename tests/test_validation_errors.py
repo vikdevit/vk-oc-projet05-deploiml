@@ -4,9 +4,9 @@ from app.main import app
 client = TestClient(app)
 
 
-# -------------------------------------------------
-# 1. Valeur hors limites (conint)
-# -------------------------------------------------
+# =======================
+# 1. Valeur hors limites 
+# =======================
 def test_invalid_range():
     payload = {
         "employees": [{
@@ -21,7 +21,7 @@ def test_invalid_range():
             "nombre_total_annees_dans_l_entreprise": 3,
             "nombre_total_annees_dans_le_poste_actuel": 2,
 
-            # ❌ valeur invalide volontairement
+            # valeur invalide volontairement
             "satisfaction_salarie_environnement": 999,
 
             "satisfaction_salarie_nature_travail": 3,
@@ -48,14 +48,14 @@ def test_invalid_range():
     assert response.status_code == 422
 
 
-# -------------------------------------------------
-# 2. Enum invalide (Literal)
-# -------------------------------------------------
+# ====================
+# 2. valeur invalide 
+# ====================
 def test_invalid_enum():
     payload = {
         "employees": [{
             "age": 30,
-            "genre": "X",  # ❌ invalide
+            "genre": "X",  # invalide
             "revenu_mensuel": 3000,
             "statut_marital": "celibataire",
             "departement": "consulting",

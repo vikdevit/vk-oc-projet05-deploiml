@@ -4,9 +4,9 @@ from app.main import app
 client = TestClient(app)
 
 
-# -------------------------------------------------
-# 1. Champ manquant → erreur 422
-# -------------------------------------------------
+# ===============================
+# 1. Champ manquant > erreur 422
+# ===============================
 def test_missing_fields():
     payload = {
         "employees": [{
@@ -20,9 +20,9 @@ def test_missing_fields():
     assert response.status_code == 422
 
 
-# -------------------------------------------------
-# 2. Mauvais type de données → erreur 422
-# -------------------------------------------------
+# ========================================
+# 2. Mauvais type de données > erreur 422
+# ========================================
 def test_wrong_type():
     payload = {
         "employees": [{
@@ -61,9 +61,9 @@ def test_wrong_type():
     assert response.status_code == 422
 
 
-# -------------------------------------------------
+# ==========================
 # 3. JSON complètement vide
-# -------------------------------------------------
+# ==========================
 def test_empty_payload():
     response = client.post("/predict_test", json={})
 
