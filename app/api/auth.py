@@ -10,14 +10,7 @@ from app.schemas.response import LoginResponse
 
 router = APIRouter()
 
-
-#@lru_cache
-#def load_user():
-#    
-#    with open("data/user.json", "r") as f:
-#        return json.load(f)
-
-# chemin robuste (local + docker + HF)
+# définir chemin du répertoire
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 USER_PATH = os.path.join(BASE_DIR, "data", "user.json")
 

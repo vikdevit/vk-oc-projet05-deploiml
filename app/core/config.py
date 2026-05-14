@@ -18,36 +18,5 @@ class Settings(BaseSettings):
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
-    #class Config:
-    #    env_file = ".env"
-
 settings = Settings()
 
-#class Settings(BaseSettings):
-
-    # =====================
-    # JWT CONFIG
-    # =====================
-#    JWT_SECRET: str
-#    JWT_ALGORITHM: str = "HS256"
-#    ACCESS_TOKEN_EXPIRE_MINUTES: int = 60
-
-    # =====================
-    # POSTGRES CONFIG
-    # =====================
-#    POSTGRES_USER: str
-#    POSTGRES_PASSWORD: str
-#    POSTGRES_DB: str
-#    POSTGRES_HOST: str = "localhost"
-#    POSTGRES_PORT: int = 5432
-
-#    class Config:
-#        env_file = ".env"
-#        extra = "ignore"
-
-
-#settings = Settings()
-
-
-
-# ne pas oublier après de mettre cela en ENV variables / GitHub Secrets

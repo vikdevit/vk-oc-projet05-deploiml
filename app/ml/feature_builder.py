@@ -2,9 +2,9 @@ import pandas as pd
 import numpy as np
 
 
-# =========================================================
+# ==========================================
 # CONFIG FEATURES (source unique de vérité)
-# =========================================================
+# ==========================================
 class FeatureConfig:
 
     numeric_features = [
@@ -45,18 +45,18 @@ class FeatureConfig:
         return cls.numeric_features + cls.behavioral_features + categorical_features
 
 
-# =========================================================
+# ================
 # FEATURE BUILDER
-# =========================================================
+# ================
 class FeatureBuilder:
 
     def build(self, df_joint: pd.DataFrame) -> pd.DataFrame:
 
         df_mod = df_joint.copy()
 
-        # --------------------
+        # ===================================
         # DROP FEATURES BRUTES NON UTILISÉES
-        # --------------------
+        # ===================================
         drop_cols = [
             "id",
             "nombre_d_annees_sous_le_responsable_actuel",
@@ -65,12 +65,11 @@ class FeatureBuilder:
             "nombre_total_annees_dans_le_poste_actuel",
             "revenu_mensuel"
         ]
-        # df_mod = df_mod.drop(columns=drop_cols)
         df_mod = df_mod.drop(columns=drop_cols, errors="ignore")
 
-        # --------------------
+        # =============================
         # FEATURES NUMÉRIQUES DÉRIVÉES
-        # --------------------
+        # =============================
         df_mod["ratio_salaire_experience"] = (
             df_joint["revenu_mensuel"] /
             (df_joint["nombre_total_annees_experience"] + 1)
@@ -91,9 +90,9 @@ class FeatureBuilder:
             (df_joint["niveau_hierarchique_poste"] + 1e-6)
         )
 
-        # --------------------
+        # =============
         # SATISFACTION
-        # --------------------
+        # =============
         satisfaction_cols = [
             "satisfaction_salarie_environnement",
             "satisfaction_salarie_nature_travail",
@@ -108,9 +107,9 @@ class FeatureBuilder:
             bins=10
         )
 
-        # --------------------
+        # ==========================
         # FEATURES COMPORTEMENTALES
-        # --------------------
+        # ==========================
         df_mod["stagnation"] = (
             df_joint["nombre_d_annees_depuis_la_derniere_promotion"] > 3
         ).astype(int)
@@ -128,16 +127,16 @@ class FeatureBuilder:
             df_mod["satisfaction_moyenne"] < 2.5
         ).astype(int)
 
-        # =====================================================
-        # ENCODING MANUEL (CATÉGORIELS → BOOLS)
-        # =====================================================
+        # ============================================
+        # ENCODING MANUEL (CATÉGORIELS vers BOOLEENS)
+        # ============================================
 
         def create_col(condition):
             return condition.astype(int)
 
-        # --------------------
+        # ======
         # POSTE
-        # --------------------
+        # ======
         postes_valides = [
             "assistant_de_direction",
             "cadre_commercial",
@@ -154,18 +153,18 @@ class FeatureBuilder:
 
         df_mod["poste_other"] = create_col(~df_joint["poste"].isin(postes_valides))
 
-        # --------------------
+        # ============
         # DEPARTEMENT
-        # --------------------
+        # ============
         df_mod["departement_commercial"] = create_col(df_joint["departement"] == "commercial")
         df_mod["departement_consulting"] = create_col(df_joint["departement"] == "consulting")
         df_mod["departement_other"] = create_col(
             ~df_joint["departement"].isin(["commercial", "consulting"])
         )
 
-        # --------------------
+        # ==============
         # DOMAINE ETUDE
-        # --------------------
+        # ==============
         domaines_valides = [
             "autre",
             "entrepreunariat",
@@ -181,28 +180,28 @@ class FeatureBuilder:
             ~df_joint["domaine_etude"].isin(domaines_valides)
         )
 
-        # --------------------
+        # ======
         # GENRE
-        # --------------------
+        # ======
         df_mod["genre_f"] = create_col(df_joint["genre"] == "f")
         df_mod["genre_m"] = create_col(df_joint["genre"] == "m")
 
-        # --------------------
+        # ===========
         # HEURES SUP
-        # --------------------
+        # ===========
         df_mod["heures_supplementaires_non"] = create_col(df_joint["heures_supplementaires"] == "non")
         df_mod["heures_supplementaires_oui"] = create_col(df_joint["heures_supplementaires"] == "oui")
 
-        # --------------------
+        # ============
         # DEPLACEMENT
-        # --------------------
+        # ============
         df_mod["frequence_deplacement_aucun"] = create_col(df_joint["frequence_deplacement"] == "aucun")
         df_mod["frequence_deplacement_frequent"] = create_col(df_joint["frequence_deplacement"] == "frequent")
         df_mod["frequence_deplacement_occasionnel"] = create_col(df_joint["frequence_deplacement"] == "occasionnel")
 
-        # --------------------
+        # ==========
         # EDUCATION
-        # --------------------
+        # ==========
         for i in [1, 2, 3, 4]:
             df_mod[f"niveau_education_{i}"] = create_col(df_joint["niveau_education"] == i)
 

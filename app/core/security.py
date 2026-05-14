@@ -3,9 +3,9 @@ import jwt
 import bcrypt
 from app.core.config import settings
 
-# ------------------
+# ==============
 # HASH PASSWORD
-# ------------------
+# ==============
 def hash_password(password: str) -> str:
     return bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
 
@@ -13,9 +13,9 @@ def verify_password(password: str, hashed: str) -> bool:
     return bcrypt.checkpw(password.encode(), hashed.encode())
 
 
-# ------------------
+# ====
 # JWT
-# ------------------
+# ====
 def create_access_token(data: dict):
     payload = data.copy()
     expire = datetime.utcnow() + timedelta(minutes=settings.access_token_expire_minutes)

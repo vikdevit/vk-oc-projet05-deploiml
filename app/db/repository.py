@@ -1,32 +1,16 @@
 import json
-#import hashlib
 import psycopg2
 import uuid
 
-# =========================================================
-# HASH EMPLOYEE
-# =========================================================
-#def generate_employee_hash(employee: dict):
-#    """
-#    Hash stable pour éviter doublons
-#    """
-#    raw = f"{employee.get('age')}_{employee.get('genre')}_{employee.get('revenu_mensuel')}_{employee.get('poste')}_{employee.get('departement')}_{employee.get('nombre_total_annees_experience')}"
-#    return hashlib.sha256(raw.encode()).hexdigest()
-
-
-# =========================================================
+# ================
 # INSERT EMPLOYEE
-# =========================================================
+# ================
 def insert_employee(conn, employee: dict):
 
     employee = employee.copy()
 
     #  sécurité API
     employee.pop("id", None)
-
-    #  hash obligatoire
-    #employee_hash = generate_employee_hash(employee)
-    #employee["employee_hash"] = employee_hash
 
     query = """
     INSERT INTO employees (
@@ -90,9 +74,9 @@ def insert_employee(conn, employee: dict):
     return employee_id
 
 
-# =========================================================
+# ================
 # INSERT FEATURES
-# =========================================================
+# ================
 def insert_features(conn, employee_id: int, features: dict):
 
     features["employee_id"] = employee_id
@@ -109,9 +93,9 @@ def insert_features(conn, employee_id: int, features: dict):
         cur.execute(query, features)
         conn.commit()
 
-# =========================================================
+# ==================
 # INSERT PREDICTION
-# =========================================================
+# ==================
 def insert_prediction(conn, employee_id: int, prediction: dict):
 
     query = """
@@ -146,9 +130,9 @@ def insert_prediction(conn, employee_id: int, prediction: dict):
         cur.execute(query, payload)
         conn.commit()
 
-# =========================================================
+# ================
 # INSERT API_LOGS
-# =========================================================
+# ================
 def log_api(conn, request_id, employee_id, step, status, message=None, payload=None):
 
     query = """

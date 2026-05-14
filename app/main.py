@@ -13,11 +13,9 @@ app = FastAPI(
 app.include_router(auth_router)
 app.include_router(router)
 
-
 @app.get("/health")
 def health_check():
     return {"status": "API running"}
-
 
 @app.get("/")
 def root():
@@ -27,10 +25,9 @@ def root():
         "docs": "/docs"
     }
 
-
-# ----------------------------
-# SWAGGER JWT FIX (IMPORTANT)
-# ----------------------------
+# ===========
+# SWAGGER JWT 
+# ===========
 def custom_openapi():
     if app.openapi_schema:
         return app.openapi_schema
@@ -42,7 +39,7 @@ def custom_openapi():
         routes=app.routes,
     )
 
-    # 🔐 SIMPLE BEARER AUTH (PAS OAUTH2)
+    # simple bearer auth (pas oauth2)
     openapi_schema["components"]["securitySchemes"] = {
         "BearerAuth": {
             "type": "http",
@@ -51,7 +48,7 @@ def custom_openapi():
         }
     }
 
-    # 🔐 appliquer uniquement aux endpoints protégés
+    # appliquer uniquement aux endpoints protégés
     protected_paths = ["/predict", "/explain"]
 
     for path, methods in openapi_schema["paths"].items():
@@ -63,6 +60,5 @@ def custom_openapi():
 
     app.openapi_schema = openapi_schema
     return openapi_schema
-
 
 app.openapi = custom_openapi

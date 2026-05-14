@@ -11,30 +11,31 @@ import base64
 
 from app.ml.feature_builder import FeatureBuilder, FeatureConfig
 
-# =========================================================
-# PATH ROOT PROJET (IMPORTANT PRODUCTION)
-# =========================================================
+# =================
+# Chemin du projet
+# =================
 BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../"))
 
 MODEL_PATH = os.path.join(BASE_DIR, "models", "model.pkl")
 THRESHOLD_PATH = os.path.join(BASE_DIR, "models", "threshold.json")
 
 
-# =========================================================
-# LOAD ARTIFACTS
-# =========================================================
+# ==========================================
+# Chargement du modèle entraîné et du seuil 
+# ==========================================
 model = joblib.load(MODEL_PATH)
 
 with open(THRESHOLD_PATH, "r") as f:
     threshold = json.load(f)["threshold"]
 
 
-# =========================================================
-# SHAP SETUP
-# =========================================================
+# ==================================================
+# Configuration calcul et affichage des shap values
+# ==================================================
 classifier = model.named_steps["classifier"]
 preprocessor = model.named_steps["preprocessor"]
 explainer = shap.TreeExplainer(classifier)
+
 # récupération de l'espérance
 base_value = explainer.expected_value
 
@@ -44,9 +45,9 @@ if isinstance(base_value, (list, np.ndarray)):
 else:
     base_value = float(base_value)
 
-# =========================================================
-# UTILS - SHAP VISUALIZATION
-# =========================================================
+# ==============================
+# Visualisation des shap values
+# ==============================
 def shap_waterfall_base64(shap_exp, index=0):
     import matplotlib.pyplot as plt
     import io
@@ -59,8 +60,7 @@ def shap_waterfall_base64(shap_exp, index=0):
     # 1. récupérer explication brute
     exp = shap_exp[index]
 
-    # 2. CAS MULTI-CLASSE (très important)
-    # shap.values = (n_features, n_classes)
+    # 2. CAS MULTI-CLASSE 
     if hasattr(exp, "values") and len(exp.values.shape) == 2:
 
         exp = shap.Explanation(
@@ -74,7 +74,7 @@ def shap_waterfall_base64(shap_exp, index=0):
             feature_names=exp.feature_names
         )
 
-    # 3. FORCER base_value scalaire (CRUCIAL)
+    # 3. formater en scalaire 
     exp = shap.Explanation(
         values=exp.values,
         base_values=float(np.array(exp.base_values).reshape(-1)[0]),
@@ -91,42 +91,41 @@ def shap_waterfall_base64(shap_exp, index=0):
 
     return base64.b64encode(buf.getvalue()).decode("utf-8")
 
-# =========================================================
-# PREDICTION FUNCTION (PRODUCTION CORE)
-# =========================================================
-#def predict_employees(data_json: dict):
+# ==============================================
+# Fonction d'utilisation du modèle en inférence
+# ==============================================
 def predict_employees(data_json: dict, include_waterfall: bool = False):
 
-    # ---------------------
+    # ==========
     # LOAD DATA
-    # ---------------------
+    # ==========
     df = pd.DataFrame(data_json["employees"])
 
-    # ---------------------
+    # ====================
     # FEATURE ENGINEERING
-    # ---------------------
+    # ====================
     fb = FeatureBuilder()
     df_mod = fb.build(df)
 
-    # ---------------------
+    # ==================
     # FEATURE SELECTION
-    # ---------------------
+    # ==================
     final_features = FeatureConfig.get_final_features(df_mod)
     X = df_mod[final_features].copy()
 
-    # bool -> int (IMPORTANT cohérence sklearn)
+    # conversion booléen vers integer pour sklearn
     bool_cols = X.select_dtypes(include="bool").columns
     X[bool_cols] = X[bool_cols].astype(int)
 
-    # ---------------------
-    # PREDICTION PROBA
-    # ---------------------
+    # =========================================================================
+    # passage de la probabilité à la classe prédite par le modèle en inférence
+    # =========================================================================
     proba = model.predict_proba(X)[:, 1]
     pred = (proba >= threshold).astype(int)
 
-    # ---------------------
+    # =====
     # SHAP
-    # ---------------------
+    # =====
     X_transformed = preprocessor.transform(X)
     
     feature_names = preprocessor.get_feature_names_out()
@@ -137,8 +136,7 @@ def predict_employees(data_json: dict, include_waterfall: bool = False):
     )
 
     shap_exp = explainer(X_transformed_df)
-
-    #shap_exp = explainer(X_transformed)
+   
 
     # shap values classe 1
     if len(shap_exp.values.shape) == 3:
@@ -147,17 +145,14 @@ def predict_employees(data_json: dict, include_waterfall: bool = False):
         shap_class1 = shap_exp.values
 
 
-    # ---------------------
-    # OUTPUT
-    # ---------------------
+    # ==========
+    # Résultats
+    # ==========
     results = []
-
-    #feature_names = preprocessor.get_feature_names_out()
-
+    
     for i in range(len(X)):
         shap_sum = float(np.sum(shap_class1[i]))
-
-        #waterfall = shap_waterfall_base64(shap_exp, i)
+        
         waterfall = None
         if include_waterfall:
             waterfall = shap_waterfall_base64(shap_exp, i)
@@ -188,29 +183,5 @@ def predict_employees(data_json: dict, include_waterfall: bool = False):
     }
 })
 
-
-
-        #results.append({
-         #   "employee_id": int(df.iloc[i]["id"]) if "id" in df.columns else None,
-
-            # input brut (utile audit / DB)
-          #  "input": df.iloc[i].to_dict(),
-
-            # 👇 AJOUT IMPORTANT POUR LA DB FEATURES
-           # "features": X.iloc[i].to_dict(),
-
-            # prédiction métier
-           # "prediction": int(pred[i]),
-           # "probability": float(proba[i]),
-
-            # explicabilité (stockage DB / endpoint futur)
-           # "explainability": {
-            #    "feature_names": feature_names.tolist(),
-             #   "base_value": float(base_value),
-             #   "shap_values": shap_class1[i].tolist(),
-             #   "shap_sum": shap_sum,
-             #   "waterfall_plot": waterfall
-           # }
-       # })
 
     return results

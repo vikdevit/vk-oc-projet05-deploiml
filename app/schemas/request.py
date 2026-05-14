@@ -48,8 +48,6 @@ class Employee(BaseModel):
 
     precedent_pourcentage_d_augmentation: conint(ge=11, le=25)
 
-    #a_quitte_l_entreprise: Literal["oui", "non"]
-
     nombre_participation_pee: conint(ge=1, le=3)
 
     nombre_de_formations_suivies: conint(ge=0, le=6)

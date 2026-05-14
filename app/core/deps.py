@@ -9,7 +9,7 @@ def get_current_user(
     credentials: HTTPAuthorizationCredentials = Security(security)
 ):
     try:
-        token = credentials.credentials  # <-- le JWT brut
+        token = credentials.credentials  
         payload = decode_token(token)
         return payload.get("sub")
 
