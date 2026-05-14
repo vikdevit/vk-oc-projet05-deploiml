@@ -10,16 +10,15 @@ jobs:
     name: CI - Build & Smoke test
     runs-on: ubuntu-latest
 
-    steps:
-      # il reste encore à intégrer les tests de pytest avec cov comme fait en local
+    steps:    
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # 🐳 Build Docker image
+      # Build Docker image
       - name: Build Docker image
         run: docker build -f Dockerfile -t hf-test .
 
-      # 🚀 Run container (HF mode)
+      # Run container (HF mode)
       - name: Run container
         run: |
           docker run -d -p 8000:7860 --name api \
