@@ -56,7 +56,7 @@ def insert_employees():
         "nombre_d_annees_depuis_la_derniere_promotion",
         "nombre_d_annees_sous_le_responsable_actuel"
     ]
-# 🔥 récupération existants (clé métier simple)
+# récupération existants 
     cur.execute("""
         SELECT age, genre, revenu_mensuel, poste, departement
         FROM employees

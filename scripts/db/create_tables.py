@@ -10,24 +10,9 @@ PASSWORD = os.getenv("POSTGRES_PASSWORD")
 HOST = os.getenv("POSTGRES_HOST", "localhost")
 PORT = os.getenv("POSTGRES_PORT", "5432")
 
-
-# =========================
-# USERS
-# =========================
-#CREATE_USERS_TABLE = """
-#CREATE TABLE IF NOT EXISTS users (
-#    id SERIAL PRIMARY KEY,
-#    username VARCHAR(100) UNIQUE NOT NULL,
-#    email VARCHAR(150) UNIQUE NOT NULL,
-#    password_hash TEXT NOT NULL,
-#    role VARCHAR(50) DEFAULT 'user'
-#);
-#"""
-
-
-# =========================
-# EMPLOYEES (MASTER TABLE)
-# =========================
+# ==========
+# EMPLOYEES 
+# ==========
 CREATE_EMPLOYEES_TABLE = """
 CREATE TABLE employees (
     id SERIAL PRIMARY KEY,
@@ -62,9 +47,9 @@ CREATE TABLE employees (
 );
 """
 
-# =========================
-# FEATURES (FK -> employees)
-# =========================
+# =========
+# FEATURES 
+# =========
 CREATE_FEATURES_TABLE ="""
 CREATE TABLE IF NOT EXISTS features (
     id SERIAL PRIMARY KEY,
@@ -133,9 +118,9 @@ CREATE TABLE IF NOT EXISTS features (
 );
 """
 
-# =========================
-# PREDICTIONS (historique)
-# =========================
+# ============
+# PREDICTIONS 
+# ============
 CREATE_PREDICTIONS_TABLE = """
 CREATE TABLE IF NOT EXISTS predictions (
     id SERIAL PRIMARY KEY,
@@ -155,10 +140,9 @@ CREATE TABLE IF NOT EXISTS predictions (
 );
 """
 
-
-# =========================
+# =========
 # API_LOGS
-# =========================
+# =========
 CREATE_API_LOGS_TABLE = """
 CREATE TABLE api_logs (
     id SERIAL PRIMARY KEY,
@@ -183,7 +167,6 @@ def create_tables():
 
     cur = conn.cursor()
 
-    #cur.execute(CREATE_USERS_TABLE)
     cur.execute(CREATE_EMPLOYEES_TABLE)
     cur.execute(CREATE_FEATURES_TABLE)
     cur.execute(CREATE_PREDICTIONS_TABLE)

@@ -32,7 +32,7 @@ def reset_database():
 
     cur = conn.cursor()
 
-    print("🧹 Suppression complète des tables...")
+    print("Suppression complète des tables...")
 
     cur.execute(DROP_ALL)
 

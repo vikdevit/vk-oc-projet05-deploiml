@@ -4,9 +4,9 @@ import matplotlib.pyplot as plt
 from PIL import Image
 import io
 
-# ==============================
+# ========
 # CONFIG
-# ==============================
+# ========
 BASE_URL = "http://127.0.0.1:8000"
 
 LOGIN_PAYLOAD = {
@@ -51,10 +51,10 @@ PREDICT_PAYLOAD = {
 
 OUTPUT_FILE = "waterfall_test.png"
 
-# ==============================
+# =========
 # 1. LOGIN
-# ==============================
-print("🔐 Login...")
+# ==========
+print("Login...")
 login_res = requests.post(f"{BASE_URL}/auth/login", json=LOGIN_PAYLOAD)
 
 if login_res.status_code != 200:
@@ -63,9 +63,9 @@ if login_res.status_code != 200:
 token = login_res.json()["access_token"]
 headers = {"Authorization": f"Bearer {token}"}
 
-# ==============================
-# 2. CALL WATERFALL ENDPOINT
-# ==============================
+# ==================================
+# 2. Applel de l'Endpoint WATERFALL 
+# ==================================
 print("📊 Request waterfall...")
 res = requests.post(
     f"{BASE_URL}/explain/waterfall",
@@ -78,15 +78,15 @@ if res.status_code != 200:
 
 data = res.json()
 
-# ==============================
-# 3. DECODE BASE64
-# ==============================
+# ==================================================================
+# 3. DECODE BASE64 pour obtention de l'image de la courbe waterfall
+# ==================================================================
 b64_img = data["waterfalls"][0]
 img_bytes = base64.b64decode(b64_img)
 
-# ==============================
+# ==============
 # 4. SAVE IMAGE
-# ==============================
+# ==============
 with open(OUTPUT_FILE, "wb") as f:
     f.write(img_bytes)
 
