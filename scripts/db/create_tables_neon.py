@@ -1,14 +1,4 @@
-import psycopg2
-from dotenv import load_dotenv
-import os
-
-load_dotenv()
-
-DB_NAME = os.getenv("POSTGRES_DB")
-USER = os.getenv("POSTGRES_USER")
-PASSWORD = os.getenv("POSTGRES_PASSWORD")
-HOST = os.getenv("POSTGRES_HOST", "localhost")
-PORT = os.getenv("POSTGRES_PORT", "5432")
+from app.db.database_neon import get_connection
 
 # ==========
 # EMPLOYEES 
@@ -155,18 +145,8 @@ CREATE TABLE api_logs (
     created_at TIMESTAMP DEFAULT now()
 );
 """
-
 def create_tables():
-    
-    # ci-dessous pour méthodes 1 et 2 (base de données en local)
-    conn = psycopg2.connect(
-        dbname=DB_NAME,
-        user=USER,
-        password=PASSWORD,
-        host=HOST,
-        port=PORT
-    )
-
+    conn = get_connection()
     cur = conn.cursor()
 
     cur.execute(CREATE_EMPLOYEES_TABLE)
@@ -178,7 +158,7 @@ def create_tables():
     cur.close()
     conn.close()
 
-    print("Tables employees, features et predictions créées.")
+    print("✅ Tables créées sur Neon DB uniquement")
 
 
 if __name__ == "__main__":

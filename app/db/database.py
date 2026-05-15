@@ -19,9 +19,9 @@ def get_connection():
     """
     # HF MODE pas de DB
     if settings.environment == "hf":
-        raise RuntimeError("Database disabled in Hugging Face model")
+        #raise RuntimeError("Database disabled in Hugging Face model")
+        return psycopg2.connect(os.getenv("DATABASE_URL"), sslmode="require")
 
-      
     return psycopg2.connect(
         dbname=DB_NAME,
         user=DB_USER,

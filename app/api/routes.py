@@ -47,12 +47,12 @@ def predict_test(data: PredictionRequest):
 @router.post("/predict")
 def predict(data: PredictionRequest):
     
-    if settings.environment == "hf":
-        return {
-            "status": "error",
-            "mode": "hf_no_db",
-            "message": "Database not available in Hugging Face. Use /predict_test"
-        }
+    #if settings.environment == "hf":
+        #return {
+        #    "status": "error",
+        #    "mode": "hf_no_db",
+        #    "message": "Database not available in Hugging Face. Use /predict_test"
+        #}
 
     conn = get_connection()
     results = []

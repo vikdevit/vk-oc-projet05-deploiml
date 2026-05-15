@@ -1,0 +1,14 @@
+* dev
+  feature/api-fastapi
+  feature/database
+  feature/hf-deployment
+  feature/init-structure
+  feature/tests
+  main
+  remotes/origin/dev
+  remotes/origin/feature/api-fastapi
+  remotes/origin/feature/database
+  remotes/origin/feature/hf-deployment
+  remotes/origin/feature/init-structure
+  remotes/origin/feature/tests
+  remotes/origin/main

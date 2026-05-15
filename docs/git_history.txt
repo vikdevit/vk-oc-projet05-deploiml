@@ -1,0 +1,79 @@
+* cb38068 (HEAD -> dev, origin/dev) chore: mise en forme ci-cd.yml
+* 81c2010 chore: mise en forme scripts tests/
+* 57f3add chore: suppression de LICENSE
+* 9ac6aff chore: mise en forme scripts de scripts/db
+* 5082eed chore: remove deleted files in app/
+* 558e21a style: mise au propre des scripts
+* 9baf592 docs(readme): fix readme.md for HF space
+* 45bff3e fix : ci-cd.yml update README.md
+* 7b211ce docs(readme): add initial README.md fix tree
+* 662cd03 docs(readme): add initial README.md
+* bd2a6f7 FIX: ignorer les appels à db durant le test en ci
+* 1868099 add CI pipeline pytest filtering DB tests_sans authet repo2
+* 1f28a65 add CI pipeline pytest filtering DB tests_sans authet repo
+* 613519d add CI pipeline pytest filtering DB tests_sans auth
+* b2a91c1 add CI pipeline pytest filtering DB tests
+* af224e0 FIX: test realisable en HF environnment
+* 968c07e prepa sans mode sans db
+* c131369 ci-cd: add deploy workflow without pytest
+* 78e04e0 FIX: switch auth to HF env variables
+* e3cff4d FIX: retirer hf de Dockerfile du hugging face
+* 444ac65 fix: authentification independante environnement
+* aca707c suppresison Dockerfile.hf sur le depot distant
+* d22896d fix hf dockerfile naming
+* 7a2c458 fix hf space config
+* c35e037 Add CI/CD Hugging Face workflow
+* 9be8f23 fix: database.py auth.py et config.py mode initial safe
+* 7e079b2 fix: safe mode CI/HF support auth.py
+* 1fc7787 fix: safe mode CI/HF support
+* abf0536 ci: add pytest coverage pipeline with dummy auth
+* 49c1abc ci: add pytest coverage pipeline
+| * 9218e3a (main) update gitignore + add deploy workflow
+| | * 2ac0c21 (origin/feature/tests, feature/tests) chore: ajout .yml et coverage
+| | | * f280ab5 (origin/feature/init-structure, feature/init-structure) chore: ajout .yml et coverage et data et .uvlock
+| | | | * ed555fc (origin/feature/hf-deployment, feature/hf-deployment) chore: ajout .yml et coverage
+| |_|_|/  
+|/| | |   
+* | | | 536cb9a feat: add Hugging Face deployment mode
+* | | | 2da9484 feat: add HF safe predict_test endpoint and DB toggle in predict route
+* | | | 413d2aa feat: add environment config for HF support
+* | | | 1f34051 chore(docker): set uvicorn port to 8000 for consistent local execution
+* | | | 6e961f9 fix ci-cd yaml curl-v
+* | | | 6ee44f9 fix ci-cd yaml endpoint docsassouplir boucle3
+* | | | 0abbf6e fix ci-cd yaml endpoint docsassouplir boucle2
+* | | | 30f11ea fix ci-cd yaml endpoint docsassouplir boucle
+* | | | 48c1630 fix ci-cd yaml endpoint docs
+* | | | 0fc4fa5 fix ci-cd yaml port8000 vers 7860_2
+* | | | 4fab9aa fix ci-cd yaml port8000 vers 7860
+* | | | f913da9 fix ci-cd yaml
+* | | | 3038f12 fix(ci): use correct dockerfile path and DBlogcorrection5
+* | | | 7fbf24a fix(ci): use correct dockerfile path and DBlogcorrection4creatzetables
+* | | | 73fa9c5 fix(ci): use correct dockerfile path and DBlogcorrection3
+* | | | d1ab3ea fix(ci): use correct dockerfile path and DBlogcorrection2
+* | | | 22014f8 fix(ci): use correct dockerfile path and DBlogcorrection
+* | | | f3cab0d fix(ci): use correct dockerfile path and DBlog
+* | | | 5273a22 fix(ci): use correct dockerfile path and DB
+* | | | bb5b568 fix(ci): use correct dockerfile path
+* | | | 49a6cc2 chore(ci): add GitHub Actions workflow
+* | | | 8c6ff95 chore(docker): update Dockerfile, requirements and dockerignore for production
+| |/ /  
+|/| |   
+* | | a036739 chore: remove unused ML scripts and legacy tests
+* | | 65f2082 chore: ignore coverage cache file
+* | | cb9a83f feat: complete test suite and refactor ML pipeline
+| | | * 9556019 (origin/feature/database, feature/database) chore: ajout .yml et coverage
+| |_|/  
+|/| |   
+* | | 78c4ff1 feat: integrate API, database and ML pipeline with full logging system
+| | | * f0249c6 (origin/feature/api-fastapi, feature/api-fastapi) rajout coverage et old .yml
+| |_|/  
+|/| |   
+* | | 64d0f63 feat:API FastAPI complète avec endpoints predict et explain+SHAP
+* | | 0073eb6 feat(api): add FastAPI routes, auth and schemas
+|/ /  
+* | bccff04 (tag: v1.0, origin/main) refactor: clean ML pipeline and add production inference system
+* | ee0e616 chore(git): update gitignore for env example handling
+* | 8917a90 chore(env): add environment example template
+* | 828d503 docs(readme): update documentation and add project notes
+|/  
+* 5b18a16 (tag: v0.1-structure-initiale) chore: initialiser project structure
