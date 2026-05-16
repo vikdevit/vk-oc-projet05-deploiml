@@ -20,7 +20,7 @@ L’API permet :
 * une prédiction du risque de départ d'un nouveau salarié de l'entreprise
 * une explication de la contribution de chaque feature à la prédiction finale via la méthode  SHAP 
 * la possibilité d'obtenir la courbe waterfall montrant le passage de l'espérance à la prédiction via un fichier encodé en base64
-* un stockage des données d'entrée, des features et des données de sortie (prédiction, valeurs SHAP) en base PostgreSQL locale
+* un stockage des données d'entrée, des features et des données de sortie (prédiction, valeurs SHAP) en base PostgreSQL locale (Dev) ainsi qu'en base SQL sur un espace cloud via Neon DB (Ops).
 
 Le projet s’inscrit dans une démarche MLOps complète :
 
@@ -83,6 +83,9 @@ Elle sera initialisée avec les trois scripts suivants:
 - python scripts/db/insert_employees.py
 ```
 
+La version cloud de cette base sera initialisée sur Neon DB avec la récupération de l'url de connection de la base permettant à l'API d'interagir avec la base de données.
+
+
 ## Lancement de l'API
 
 ### Méthode 1 : local avec uvicorn
@@ -125,7 +128,9 @@ L'API est lancée par deux workflows successifs github actions intégrant respec
 .github/workflows/ci.yml
 .github/workflows/ci-cd.yml
 ```
-La méthode 3 repose sur un pipeline CI/CD en deux étapes :
+La méthode 3 repose sur un pipeline CI/CD en deux étapes pour déployer l'API sur Hugging Face ainsi qu'une connection à la base de données SQL en mode cloud sur Neon DB :
+
+-0. création de la base de données et des tables associées dans Neon DB avec les trois scripts précédents utilisés pour la création de la version locale de cette même base 
 
 -1. un premier workflow de CI exécute l’ensemble des tests automatisés (unitaires, API et pipeline ML avec pytest et coverage) à chaque push ou pull request sur la branche dev.
 
@@ -133,9 +138,8 @@ La méthode 3 repose sur un pipeline CI/CD en deux étapes :
 
 Le résultat obtenu est:
 -une API conteneurisée stateless et déployée sur Hugging Face
--pas d’accès à la base de données locale
--pas d’écriture en base
 -prédiction, valeurs SHAP et waterfall en base64 uniquement
+-une écriture des données d'entrée et de sortie du modèle dans la base de données cloud (données employé, features, prédiction, espérance et valeurs SHAP) 
 
 ## Authentification
 
@@ -238,7 +242,7 @@ un workflow spécifique est lancé avant déploiement avec le fichier ci-dessous
 .github/workflows/ci.yml
 ```
 
-Le workflow github actions intégrant ce fichier exécute automatiquement les tests unitaires à chaque modification de code intégrat un push sur la branche dev. Ces tests ne comprennent pas le sous-ensemble dédié à la base de données locale et se limitent donc à:
+Le workflow github actions intégrant ce fichier exécute automatiquement les tests unitaires à chaque modification de code intégrant un push sur la branche dev. Ces tests ne comprennent pas le sous-ensemble dédié à la base de données et se limitent donc à:
 -vérifier que les features sont construites comme attendu avant utilisation en inférence du modèle
 -vérifier que l'API refuse correctement des données invalides 
 -vérifier que la prédiction est valide avec une probabilité comprise entre 0 et 1 
@@ -247,7 +251,7 @@ Remarque: il reste à rendre dépendant le worklow ci-cd du résultat positif du
 
 ## Gestion des données d'entrée et de sortie
 
-### Base de données locale
+### Base de données locale (Dev)
 Stockage local dans une base de données PostgreSQL protégée par un mot de passe pour les méthodes 1 et 2.
 La configuration initiale de cette base avec l'insertion des données historiques des 1400 salariés de l'entreprise est décrite plus
 haut au paragraphe Configuration de la base de données.
@@ -269,14 +273,16 @@ Remarque:
 ```
 data/raw/employees.json
 ``` 
+### Base de données dans un espace cloud (Ops)
+Cette base de données utilise le même modèle de données que la version locale précitée ainsi que les mêmes scripts pour alimenter les tables.
+Elle est hébergée sur un espace cloud via Neon DB. L'API du modèle sur Hugging Face peut interagir en écriture avec toutes les tables de cette base à l'aide de l'url de connection string généré par Neon DB lors de la création de cette base.
+
 
 ### limitations
-- Base locale non accessible en cloud pour la méthode 3 (nécessité de créer une base de données sur un espace cloud)
 - L'Authentification de la base a été simplifiée à un seul utilisateur
 - Il reste encore à configurer une gestion multi-utilisateurs
 
 ## Améliorations possibles 
-- créer une base de données cloud (AWS/GCP ou NéonDB) fonctionnant avec la méthode 3 devenant ainsi un mode 100% production
 - configurer une authentification multi-utilisateurs pour la base de donées de cloud ainsi créée
 - construire une interface utilisateur frontend permettant à l'utilisateur :
     - de s'authentifier pour accéder à l'api de prédiction
