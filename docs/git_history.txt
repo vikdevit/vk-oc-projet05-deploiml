@@ -1,4 +1,6 @@
-* cb38068 (HEAD -> dev, origin/dev) chore: mise en forme ci-cd.yml
+* 19e1ec3 docs(readme): update README pour méthode 3 100% prod avec HF et Neon DB
+* 028134c FEAT: add input/output from hf to Neon DB
+* cb38068 chore: mise en forme ci-cd.yml
 * 81c2010 chore: mise en forme scripts tests/
 * 57f3add chore: suppression de LICENSE
 * 9ac6aff chore: mise en forme scripts de scripts/db
@@ -28,10 +30,10 @@
 * 1fc7787 fix: safe mode CI/HF support
 * abf0536 ci: add pytest coverage pipeline with dummy auth
 * 49c1abc ci: add pytest coverage pipeline
-| * 9218e3a (main) update gitignore + add deploy workflow
-| | * 2ac0c21 (origin/feature/tests, feature/tests) chore: ajout .yml et coverage
-| | | * f280ab5 (origin/feature/init-structure, feature/init-structure) chore: ajout .yml et coverage et data et .uvlock
-| | | | * ed555fc (origin/feature/hf-deployment, feature/hf-deployment) chore: ajout .yml et coverage
+| * 9218e3a update gitignore + add deploy workflow
+| | * 2ac0c21 chore: ajout .yml et coverage
+| | | * f280ab5 chore: ajout .yml et coverage et data et .uvlock
+| | | | * ed555fc chore: ajout .yml et coverage
 | |_|_|/  
 |/| | |   
 * | | | 536cb9a feat: add Hugging Face deployment mode
@@ -61,19 +63,19 @@
 * | | a036739 chore: remove unused ML scripts and legacy tests
 * | | 65f2082 chore: ignore coverage cache file
 * | | cb9a83f feat: complete test suite and refactor ML pipeline
-| | | * 9556019 (origin/feature/database, feature/database) chore: ajout .yml et coverage
+| | | * 9556019 chore: ajout .yml et coverage
 | |_|/  
 |/| |   
 * | | 78c4ff1 feat: integrate API, database and ML pipeline with full logging system
-| | | * f0249c6 (origin/feature/api-fastapi, feature/api-fastapi) rajout coverage et old .yml
+| | | * f0249c6 rajout coverage et old .yml
 | |_|/  
 |/| |   
 * | | 64d0f63 feat:API FastAPI complète avec endpoints predict et explain+SHAP
 * | | 0073eb6 feat(api): add FastAPI routes, auth and schemas
 |/ /  
-* | bccff04 (tag: v1.0, origin/main) refactor: clean ML pipeline and add production inference system
+* | bccff04 refactor: clean ML pipeline and add production inference system
 * | ee0e616 chore(git): update gitignore for env example handling
 * | 8917a90 chore(env): add environment example template
 * | 828d503 docs(readme): update documentation and add project notes
 |/  
-* 5b18a16 (tag: v0.1-structure-initiale) chore: initialiser project structure
+* 5b18a16 chore: initialiser project structure

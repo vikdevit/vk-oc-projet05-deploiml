@@ -1,2 +1,3 @@
-v0.1-structure-initiale
-v1.0
+- tag: v0.1-structure-initiale : marque la première version du projet, correspondant à l’initialisation de l’architecture du code
+- tag: v1.0, origin/main : marque une version stable du projet incluant un refactoring du pipeline ML et la mise en place du système d’inférence en production
+
