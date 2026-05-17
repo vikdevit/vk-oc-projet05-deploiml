@@ -137,11 +137,11 @@ La méthode 3 repose sur un pipeline CI/CD en deux étapes pour déployer l'API 
 -2. puis un second workflow de CI/CD distinct prend le relais afin de builder l’image Docker située à la racine du projet et déployer automatiquement l’application sur Hugging Face Spaces.
 
 Le résultat obtenu est:
--une API conteneurisée stateless et déployée sur Hugging Face
--prédiction, valeurs SHAP et waterfall en base64 uniquement
--une écriture des données d'entrée et de sortie du modèle dans la base de données cloud (données employé, features, prédiction, espérance et valeurs SHAP) 
+- une API conteneurisée stateless et déployée sur Hugging Face
+- prédiction, valeurs SHAP et waterfall en base64 uniquement
+- une écriture des données d'entrée et de sortie du modèle dans la base de données cloud (données employé, features, prédiction, espérance et valeurs SHAP) 
 
-## Authentification
+##  Authentification
 
 L'API utilise JWT.
 
@@ -188,7 +188,7 @@ Bonnes pratiques implémentées :
 - Régénérer les tokens en production
 - Utiliser une base distante sécurisée
 
-## Prédiction
+## Prédiction
 
 ### Endpoint 
 
@@ -203,12 +203,12 @@ Entrée
 }
 ``` 
 
-Sortie
--probabilité
--features
--explications SHAP
+Sortie:
+- probabilité
+- features
+- explications SHAP
 
-## Explicabilité
+## Explicabilité
 
 ### Endpoint 
 
@@ -243,9 +243,9 @@ un workflow spécifique est lancé avant déploiement avec le fichier ci-dessous
 ```
 
 Le workflow github actions intégrant ce fichier exécute automatiquement les tests unitaires à chaque modification de code intégrant un push sur la branche dev. Ces tests ne comprennent pas le sous-ensemble dédié à la base de données et se limitent donc à:
--vérifier que les features sont construites comme attendu avant utilisation en inférence du modèle
--vérifier que l'API refuse correctement des données invalides 
--vérifier que la prédiction est valide avec une probabilité comprise entre 0 et 1 
+- vérifier que les features sont construites comme attendu avant utilisation en inférence du modèle
+- vérifier que l'API refuse correctement des données invalides 
+- vérifier que la prédiction est valide avec une probabilité comprise entre 0 et 1 
 
 Remarque: il reste à rendre dépendant le worklow ci-cd du résultat positif du premier workflow ci-dessus afin de déployer l'API en cas de succès des tests unitaires.
 
